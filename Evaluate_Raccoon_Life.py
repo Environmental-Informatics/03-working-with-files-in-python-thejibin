@@ -4,17 +4,55 @@ by Jibin Joseph
 
 Assignment 03 - Using Files and Simple Data Structures with Python
 
-
+Revision 05
 Modified to add comments
 """
 ## Import the required packages
 import math
 
-## Read the given data using the built-in file open function to variable called "lines
+## Compute the mean or average of a list.
+def average_dictlist(dict_list):
+    """
+    Function computes the mean or average of the data stored in dictionary as a list
+    Input: a list
+    """
+    avg=sum(dict_list)/len(dict_list)
+    return avg
 
+##  Compute the cumulative sum of a list.
+def cum_sum_dictlist(dict_list):
+    """
+    Function computes the cumulative sum of the data stored in dictionary as a list
+    Input: a list
+    """
+    cum_sum=[]
+    sum=0
+    for i in range(len(dict_list)):
+        sum=dict_list[i]+sum
+        cum_sum.append(sum)
+    return cum_sum
+## Compute the distance between two points, when X and Y coordinates are provided
+## as two lists, one of X-coordinates and one of Y-coordinates.
+def distanceXandY(X,Y):
+    """
+    Function computes the distance traveled when X and Y coordinates are provided as lists
+    Input: X,Y
+    Use the euclidean distance formula
+    """
+    distanceXY=[0]*len(X)
+    hour=1
+    while hour<(len(X)):
+        distanceXY[hour]=math.sqrt((X[hour]-X[hour-1])**2 + (Y[hour]-Y[hour-1])**2)
+        hour+=1
+    return distanceXY
+
+
+## MAIN CODE
+
+## Read the given data using the built-in file open function to variable called "lines
 datafile=open("2008Male00006.txt",'r')
 lines=datafile.readlines()
-## Closes the open file
+## To close the file and immediately free up any system resources used
 datafile.close()
 
 ## Create an empty list correponding to line numbers in given data
@@ -57,40 +95,6 @@ for list_i in range(15):
 for list_i in range(15):
     dict_data[head[list_i]]=list_store[list_i]
 
-## Compute the mean or average of a list.
-def average_dictlist(dict_list):
-    """
-    Function computes the mean or average of the data stored in dictionary as a list
-    Input: a list
-    """
-    avg=sum(dict_list)/len(dict_list)
-    return avg
-
-##  Compute the cumulative sum of a list.
-def cum_sum_dictlist(dict_list):
-    """
-    Function computes the cumulative sum of the data stored in dictionary as a list
-    Input: a list
-    """
-    cum_sum=[]
-    sum=0
-    for i in range(len(dict_list)):
-        sum=dict_list[i]+sum
-        cum_sum.append(sum)
-    return cum_sum
-## Compute the distance between two points, when X and Y coordinates are provided as two lists, one of X-coordinates and one of Y-coordinates.
-def distanceXandY(X,Y):
-    """
-    Function computes the distance traveled when X and Y coordinates are provided as lists
-    Input: X,Y
-    Use the distance euclidean distance formula
-    """
-    distanceXY=[0]*len(X)
-    i=1
-    while i<len(X):
-        distanceXY[i]=math.sqrt((X[i]-X[i-1])**2 + (Y[i]-Y[i-1])**2)
-        i+=1
-    return distanceXY
 ## Add George's movement to the data dictionary using the key word "Distance"
 dict_data.update({'Distance':distanceXandY(dict_data[' X'],dict_data[' Y'])})
 
@@ -101,23 +105,23 @@ header_block=['Raccoon name: George Number  ' + str(dict_data["George #"][0]) + 
     'Average energy level: ' + str(average_dictlist(dict_data['Energy Level'])) + '\n',
     'Raccoon end state: '+ lastline[0]+ '\n','\n']
 
+## Creates a new dictionary with select contents of data dictionary
+## Date, Time, X and Y coordinates, the Asleep flag, the behavior mode, and the distance traveled (in that order)
+dict_data_new={keys:dict_data[keys] for keys in ('Day','Time',' X',' Y',' Asleep','Behavior Mode', 'Distance') if keys in dict_data}
+
 ## Create a new output file called "Georges_life.txt" (write mode)
 ## Also write the header block to the new file
 filetowrite=open("Georges_life.txt",'w')
 filetowrite.writelines(header_block)
 
-## Creates a new dictionary with select contents of data dictionary
-## Date, Time, X and Y coordinates, the Asleep flag, the behavior mode, and the distance traveled (in that order)
-dict_data_new={keys:dict_data[keys] for keys in ('Day','Time',' X',' Y',' Asleep','Behavior Mode', 'Distance') if keys in dict_data}
-
-
 ## Create a loop with the keys to print the select contents to new TAB delimited section of the file
 for key in dict_data_new.keys():
 	filetowrite.write(str(key) + '\t')
+
 ## To start a new line
 filetowrite.write('\n')
 
-## Create a loop to traverse the dictionary and write the values with TAB delimited
+## Create a loop to traverse the new dictionary and write the values with TAB delimited
 for i in range(len(dict_data_new['Distance'])):
 	for value in dict_data_new.values():
 		filetowrite.write(str(value[i]) + '\t')
